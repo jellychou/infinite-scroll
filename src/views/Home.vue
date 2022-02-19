@@ -69,6 +69,12 @@ const observer = new IntersectionObserver((entries) => {
       <div class="end" v-if="githubList.length === 0">- No More -</div>
     </div>
   </div>
+  <div class="des">
+    Github Repo 網址出處：
+    <a href="https://api.github.com/users/vuejs/repos">
+      https://api.github.com/users/vuejs/repos
+    </a>
+  </div>
 </template>
 <style lang="scss" scoped>
 .home {
@@ -106,7 +112,7 @@ const observer = new IntersectionObserver((entries) => {
     .loader {
       .card-skeleton {
         height: 100px;
-        width: 750px;
+        width: 760px;
         background-color: #dfdad6;
         border-radius: 15px;
         margin-bottom: 8px;
@@ -207,6 +213,16 @@ const observer = new IntersectionObserver((entries) => {
     50%,
     100% {
       background-color: #ebe6ff;
+    }
+  }
+}
+.des {
+  padding: 10px;
+  color: #745845;
+  a {
+    color: #745845;
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
