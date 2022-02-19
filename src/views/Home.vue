@@ -38,7 +38,7 @@ const observer = new IntersectionObserver((entries) => {
     if (githubList.value.length === 0) return;
     setTimeout(() => {
       loadMore();
-    }, 300);
+    }, 400);
   }
 });
 </script>
@@ -77,15 +77,15 @@ const observer = new IntersectionObserver((entries) => {
   margin: auto;
 
   h1 {
-    background: -webkit-linear-gradient(#fff, #bfbbb3);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-    text-align: center;
     font-size: 2.3rem;
-    color: #fff;
     font-weight: 900;
     text-align: left;
-    padding: 15px;
+    padding: 15px 0;
+    color: #444444;
+    text-shadow: 1px 0px 1px #ccc, 0px 1px 1px #eee, 2px 1px 1px #ccc,
+      1px 2px 1px #eee, 3px 2px 1px #ccc, 2px 3px 1px #eee, 4px 3px 1px #ccc,
+      3px 4px 1px #eee, 5px 4px 1px #ccc, 4px 5px 1px #eee, 6px 5px 1px #ccc,
+      5px 6px 1px #eee, 7px 6px 1px #ccc;
   }
   .scroll-bg {
     padding: 16px;

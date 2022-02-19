@@ -30,6 +30,10 @@ const props = defineProps({
     font-weight: bold;
   }
 
+  a:hover {
+    text-decoration: underline;
+  }
+
   &.fadeIn {
     // -webkit-animation-name: fadeIn;
     animation: fadeIn 1.5s;
