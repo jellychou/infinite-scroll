@@ -22,7 +22,7 @@ const props = defineProps({
   display: grid;
   text-align: left;
   padding: 16px 16px;
-  box-shadow: 0 2px 5px #bbbbbb;
+  box-shadow: 4px 5px 10px #bbbbbb;
   border-radius: 5px;
   background-color: #fff;
   margin: 0 2px 16px 2px;

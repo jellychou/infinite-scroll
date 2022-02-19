@@ -12,13 +12,16 @@ const reposUser = ref("");
 
 const getList = () => {
   axios.get("https://api.github.com/users/vuejs/repos").then((res) => {
-    githubList.value = res.data;
-    for (let i = 0; i < 6; i++) {
-      itemData.value.push(githubList.value[i]);
-    }
-    reposUser.value = res.data[0].full_name.split("/")[0];
-    firstLoad.value = true;
-    observer.observe(itemGroup.value);
+    setTimeout(() => {
+      githubList.value = res.data;
+      for (let i = 0; i < 6; i++) {
+        itemData.value.push(githubList.value[i]);
+        githubList.value.shift();
+      }
+      reposUser.value = res.data[0].full_name.split("/")[0];
+      firstLoad.value = true;
+      observer.observe(itemGroup.value);
+    }, 500);
   });
 };
 
@@ -32,7 +35,7 @@ const loadMore = () => {
 const observer = new IntersectionObserver((entries) => {
   const entry = entries[0];
   if (entry && entry.isIntersecting) {
-    if (githubList.value.length === 6) return;
+    if (githubList.value.length === 0) return;
     setTimeout(() => {
       loadMore();
     }, 300);
@@ -47,14 +50,14 @@ const observer = new IntersectionObserver((entries) => {
     </h1>
     <div class="scroll-bg">
       <div class="loader" v-if="!firstLoad">
-        <div class="card-load" v-for="item in 6" :key="item"></div>
+        <div class="card-skeleton" v-for="item in 6" :key="item"></div>
       </div>
       <div v-else v-for="item in itemData" :key="item">
         <Post :item-data="item" />
       </div>
       <div ref="itemGroup">
         <div
-          v-if="githubList.length > 0 && githubList.length !== 6"
+          v-if="githubList.length !== 0"
           class="snippet"
           data-title=".dot-flashing"
         >
@@ -63,7 +66,7 @@ const observer = new IntersectionObserver((entries) => {
           </div>
         </div>
       </div>
-      <div class="end" v-if="githubList.length === 6">- No More -</div>
+      <div class="end" v-if="githubList.length === 0">- No More -</div>
     </div>
   </div>
 </template>
@@ -74,7 +77,7 @@ const observer = new IntersectionObserver((entries) => {
   margin: auto;
 
   h1 {
-    background: -webkit-linear-gradient(#fff, #d7b87c);
+    background: -webkit-linear-gradient(#fff, #bfbbb3);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     text-align: center;
@@ -86,16 +89,31 @@ const observer = new IntersectionObserver((entries) => {
   }
   .scroll-bg {
     padding: 16px;
-    border-radius: 15px;
-    box-shadow: 10px 1px 10px #936e56;
+    box-shadow: 10px 10px 10px #a59891;
     background-color: #e9e3e3;
     height: 664px;
     width: 800px;
     overflow-y: scroll;
     .loader {
-      .card-load {
+      .card-skeleton {
         height: 100px;
+        background-color: #dfdad6;
+        border-radius: 15px;
+        margin-bottom: 8px;
       }
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #e9e3e3;
+    }
+    &::-webkit-scrollbar {
+      width: 8px;
+      margin-right: 5px;
+      border-radius: 10px;
+      background-color: black;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #bdafa7;
+      border-radius: 21px;
     }
   }
   .end {
