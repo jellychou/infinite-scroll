@@ -26,6 +26,10 @@ const props = defineProps({
   border-radius: 5px;
   background-color: #fff;
   margin: 0 2px 16px 2px;
+  @media (max-width: 800px) {
+    word-break: break-word;
+    height: calc(390px / 3);
+  }
   span:nth-child(1) {
     font-weight: bold;
   }

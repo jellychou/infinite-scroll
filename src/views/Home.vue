@@ -21,7 +21,7 @@ const getList = () => {
       reposUser.value = res.data[0].full_name.split("/")[0];
       firstLoad.value = true;
       observer.observe(itemGroup.value);
-    }, 500);
+    }, 300);
   });
 };
 
@@ -86,17 +86,27 @@ const observer = new IntersectionObserver((entries) => {
       1px 2px 1px #eee, 3px 2px 1px #ccc, 2px 3px 1px #eee, 4px 3px 1px #ccc,
       3px 4px 1px #eee, 5px 4px 1px #ccc, 4px 5px 1px #eee, 6px 5px 1px #ccc,
       5px 6px 1px #eee, 7px 6px 1px #ccc;
+
+    @media (max-width: 800px) {
+      width: 100%;
+      text-align: center;
+    }
   }
   .scroll-bg {
     padding: 16px;
     box-shadow: 10px 10px 10px #a59891;
     background-color: #e9e3e3;
     height: 664px;
-    width: 800px;
     overflow-y: scroll;
+    @media (max-width: 800px) {
+      width: 90%;
+      margin: auto;
+      padding: 8px;
+    }
     .loader {
       .card-skeleton {
         height: 100px;
+        width: 750px;
         background-color: #dfdad6;
         border-radius: 15px;
         margin-bottom: 8px;
