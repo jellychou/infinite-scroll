@@ -16,7 +16,6 @@ const total = ref(0);
 const getLength = () => {
   axios.get("https://api.github.com/users/vuejs").then((res) => {
     total.value = res.data?.public_repos;
-    console.log(res);
   });
 };
 
@@ -27,7 +26,6 @@ const getList = () => {
     )
     .then((res) => {
       githubList.value = res.data;
-      console.log(githubList.value);
       firstLoad.value = true;
       UpdateArr();
       observer.observe(itemGroup.value);
@@ -42,13 +40,20 @@ const UpdateArr = () => {
 
 const observer = new IntersectionObserver((entries) => {
   const entry = entries[0];
+  console.log(entries);
   if (entry && entry.isIntersecting) {
-    console.log(total.value, itemData.value.length);
     if (total.value === itemData.value.length) return;
     page.value += 1;
     getList();
   }
 });
+
+const getElement = (e) => {
+  if (e.target.scrollTop === 112) {
+    page.value = 2;
+    getList();
+  }
+};
 
 onMounted(() => {
   getList();
@@ -58,23 +63,15 @@ onMounted(() => {
 <template>
   <div class="home">
     <h1 class="title">vuejs repo list：</h1>
-    <div class="scroll-bg shadow">
+    <div class="scroll-bg shadow" @scroll="getElement">
       <div class="loader" v-if="!firstLoad">
         <div class="card-skeleton" v-for="item in 6" :key="item"></div>
       </div>
-      <div v-else v-for="item in itemData" :key="item">
+      <div v-else v-for="item in itemData" :key="item" id="card">
         <Post :item-data="item" />
       </div>
       <div ref="itemGroup">
-        <div
-          v-if="total !== itemData.length"
-          class="snippet"
-          data-title=".dot-flashing"
-        >
-          <div class="stage">
-            <div class="dot-flashing"></div>
-          </div>
-        </div>
+        <div v-if="total !== itemData.length" class="loading"></div>
       </div>
       <div class="end" v-if="total === itemData.length">- No More -</div>
     </div>
@@ -107,6 +104,7 @@ onMounted(() => {
     @media (max-width: 800px) {
       width: 100%;
       text-align: center;
+      padding-top: 40px;
     }
   }
   .scroll-bg {
@@ -116,7 +114,7 @@ onMounted(() => {
     height: 657px;
     overflow-y: scroll;
     @media (max-width: 800px) {
-      width: 90%;
+      width: 96%;
       margin: auto;
       padding: 8px;
     }
@@ -132,6 +130,9 @@ onMounted(() => {
         background-color: #dfdad6;
         border-radius: 15px;
         margin-bottom: 8px;
+        @media (max-width: 800px) {
+          width: 100%;
+        }
       }
     }
     &::-webkit-scrollbar-track {
@@ -154,82 +155,116 @@ onMounted(() => {
     text-align: center;
   }
 
-  .snippet {
-    position: relative;
-    padding: 2rem 5%;
+  .loading {
+    padding: 20px;
+    margin: auto;
+    height: 1em;
+    width: 1em;
   }
 
-  .examples .snippet:before {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0 5px;
-    content: attr(data-title);
-    font-size: 0.75rem;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-      "Courier New", monospace;
-    color: white;
-    background-color: rgb(255, 25, 100);
-    border-radius: 0.25rem 0 0.25rem 0;
+  .loading:not(:required) {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
   }
 
-  .stage {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dot-flashing {
-    position: relative;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #936e56;
-    color: #936e56;
-    animation: dotFlashing 1s infinite linear alternate;
-    animation-delay: 0.5s;
-  }
-
-  .dot-flashing::before,
-  .dot-flashing::after {
+  .loading:not(:required):after {
     content: "";
-    display: inline-block;
-    position: absolute;
-    top: 0;
+    display: block;
+    font-size: 8px;
+    width: 0.6em;
+    height: 0.6em;
+    margin-top: -0.5em;
+    -webkit-animation: spinner 700ms infinite linear;
+    -moz-animation: spinner 700ms infinite linear;
+    -ms-animation: spinner 700ms infinite linear;
+    -o-animation: spinner 700ms infinite linear;
+    animation: spinner 700ms infinite linear;
+    border-radius: 0.5em;
+    -webkit-box-shadow: rgba(149, 144, 14, 0.75) 1.5em 0 0 0,
+      rgba(149, 144, 144, 0.75) 1.1em 1.1em 0 0,
+      rgba(149, 144, 144, 0.75) 0 1.5em 0 0,
+      rgba(149, 144, 144, 0.75) -1.1em 1.1em 0 0,
+      rgba(149, 144, 144, 0.75) -1.5em 0 0 0,
+      rgba(149, 144, 144, 0.75) -1.1em -1.1em 0 0,
+      rgba(149, 144, 144, 0.75) 0 -1.5em 0 0,
+      rgba(149, 144, 144, 0.75) 1.1em -1.1em 0 0;
+    box-shadow: rgba(149, 144, 144, 0.75) 1.5em 0 0 0,
+      rgba(149, 144, 144, 0.75) 1.1em 1.1em 0 0,
+      rgba(149, 144, 144, 0.75) 0 1.5em 0 0,
+      rgba(149, 144, 144, 0.75) -1.1em 1.1em 0 0,
+      rgba(149, 144, 144, 0.75) -1.5em 0 0 0,
+      rgba(149, 144, 144, 0.75) -1.1em -1.1em 0 0,
+      rgba(149, 144, 144, 0.75) 0 -1.5em 0 0,
+      rgba(149, 144, 144, 0.75) 1.1em -1.1em 0 0;
   }
 
-  .dot-flashing::before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #936e56;
-    color: #936e56;
-    animation: dotFlashing 1s infinite alternate;
-    animation-delay: 0s;
-  }
+  /* Animation */
 
-  .dot-flashing::after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #936e56;
-    color: #936e56;
-    animation: dotFlashing 1s infinite alternate;
-    animation-delay: 1s;
-  }
-
-  @keyframes dotFlashing {
+  @-webkit-keyframes spinner {
     0% {
-      background-color: #936e56;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
     }
-    50%,
     100% {
-      background-color: #ebe6ff;
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @-moz-keyframes spinner {
+    0% {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes spinner {
+    0% {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spinner {
+    0% {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
     }
   }
 }

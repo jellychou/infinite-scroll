@@ -131,3 +131,9 @@ table {
 a {
   text-decoration: none;
 }
+
+#app {
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+}

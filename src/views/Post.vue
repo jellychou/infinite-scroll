@@ -19,6 +19,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .card {
   height: calc(390px / 6);
+  width: 96.5%;
   display: grid;
   text-align: left;
   padding: 16px 16px;
@@ -28,7 +29,9 @@ const props = defineProps({
   margin: 0 2px 16px 2px;
   @media (max-width: 800px) {
     word-break: break-word;
-    height: calc(390px / 3);
+    height: 130px;
+    width: 95.5%;
+    padding: 8px;
   }
   span:nth-child(1) {
     font-weight: bold;
