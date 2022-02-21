@@ -9,46 +9,56 @@ const itemData = ref([]);
 const itemGroup = ref(null);
 const firstLoad = ref(false);
 const reposUser = ref("");
+const page = ref(1);
+const perPage = ref(6);
+const total = ref(0);
 
-const getList = () => {
-  axios.get("https://api.github.com/users/vuejs/repos").then((res) => {
-    setTimeout(() => {
-      githubList.value = res.data;
-      for (let i = 0; i < 6; i++) {
-        itemData.value.push(githubList.value[i]);
-        githubList.value.shift();
-      }
-      reposUser.value = res.data[0].full_name.split("/")[0];
-      firstLoad.value = true;
-      observer.observe(itemGroup.value);
-    }, 300);
+const getLength = () => {
+  axios.get("https://api.github.com/users/vuejs").then((res) => {
+    total.value = res.data?.public_repos;
+    console.log(res);
   });
 };
 
-getList();
+const getList = () => {
+  axios
+    .get(
+      `https://api.github.com/users/vuejs/repos?per_page=${perPage.value}&page=${page.value}`
+    )
+    .then((res) => {
+      githubList.value = res.data;
+      console.log(githubList.value);
+      firstLoad.value = true;
+      UpdateArr();
+      observer.observe(itemGroup.value);
+    });
+};
 
-const loadMore = () => {
-  itemData.value.push(githubList.value[0]);
-  githubList.value.shift();
+const UpdateArr = () => {
+  for (let i = 0; i < githubList.value.length; i++) {
+    itemData.value.push(githubList.value[i]);
+  }
 };
 
 const observer = new IntersectionObserver((entries) => {
   const entry = entries[0];
   if (entry && entry.isIntersecting) {
-    if (githubList.value.length === 0) return;
-    setTimeout(() => {
-      loadMore();
-    }, 400);
+    console.log(total.value, itemData.value.length);
+    if (total.value === itemData.value.length) return;
+    page.value += 1;
+    getList();
   }
+});
+
+onMounted(() => {
+  getList();
+  getLength();
 });
 </script>
 <template>
   <div class="home">
-    <h1 class="title">
-      <span>{{ reposUser }}</span>
-      repo list：
-    </h1>
-    <div class="scroll-bg">
+    <h1 class="title">vuejs repo list：</h1>
+    <div class="scroll-bg shadow">
       <div class="loader" v-if="!firstLoad">
         <div class="card-skeleton" v-for="item in 6" :key="item"></div>
       </div>
@@ -57,7 +67,7 @@ const observer = new IntersectionObserver((entries) => {
       </div>
       <div ref="itemGroup">
         <div
-          v-if="githubList.length !== 0"
+          v-if="total !== itemData.length"
           class="snippet"
           data-title=".dot-flashing"
         >
@@ -66,11 +76,11 @@ const observer = new IntersectionObserver((entries) => {
           </div>
         </div>
       </div>
-      <div class="end" v-if="githubList.length === 0">- No More -</div>
+      <div class="end" v-if="total === itemData.length">- No More -</div>
     </div>
   </div>
   <div class="des">
-    Github Repo 網址出處：
+    vuejs github repo 網址出處：
     <a href="https://api.github.com/users/vuejs/repos">
       https://api.github.com/users/vuejs/repos
     </a>
@@ -88,6 +98,7 @@ const observer = new IntersectionObserver((entries) => {
     text-align: left;
     padding: 15px 0;
     color: #444444;
+    padding-bottom: 40px;
     text-shadow: 1px 0px 1px #ccc, 0px 1px 1px #eee, 2px 1px 1px #ccc,
       1px 2px 1px #eee, 3px 2px 1px #ccc, 2px 3px 1px #eee, 4px 3px 1px #ccc,
       3px 4px 1px #eee, 5px 4px 1px #ccc, 4px 5px 1px #eee, 6px 5px 1px #ccc,
@@ -102,12 +113,17 @@ const observer = new IntersectionObserver((entries) => {
     padding: 16px;
     box-shadow: 10px 10px 10px #a59891;
     background-color: #e9e3e3;
-    height: 664px;
+    height: 657px;
     overflow-y: scroll;
     @media (max-width: 800px) {
       width: 90%;
       margin: auto;
       padding: 8px;
+    }
+    &.shadow {
+      display: inline-block;
+      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 6px 10px inset;
     }
     .loader {
       .card-skeleton {
@@ -128,13 +144,14 @@ const observer = new IntersectionObserver((entries) => {
       background-color: black;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: #bdafa7;
+      background-color: #9d9b9b;
       border-radius: 21px;
     }
   }
   .end {
     color: #bb9073;
     font-size: 12px;
+    text-align: center;
   }
 
   .snippet {
