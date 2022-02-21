@@ -96,7 +96,6 @@ onMounted(() => {
     @media (max-width: 800px) {
       width: 100%;
       text-align: center;
-      padding-top: 40px;
     }
   }
   .scroll-bg {
@@ -109,6 +108,7 @@ onMounted(() => {
       width: 96%;
       margin: auto;
       padding: 8px;
+      height: 470px;
     }
     &.shadow {
       display: inline-block;
