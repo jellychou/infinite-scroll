@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
   <div class="card fadeIn">
     <span>{{ itemData.name }}</span>
-    <span>{{ itemData.description }}</span>
+    <span class="description">{{ itemData.description }}</span>
     <a :href="itemData.url">{{ itemData.url }}</a>
   </div>
 </template>
@@ -31,9 +31,15 @@ const props = defineProps({
     word-break: break-word;
     width: 95.5%;
     padding: 8px;
+    height: 100%;
   }
   span:nth-child(1) {
     font-weight: bold;
+  }
+  .description {
+    @media (max-width: 800px) {
+      padding: 5px 0;
+    }
   }
 
   a:hover {

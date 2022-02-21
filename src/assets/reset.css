@@ -104,10 +104,14 @@ section {
 body {
   line-height: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   height: 100vh;
   background-color: #bdafa7;
+  @media (max-width: 800px) {
+    align-items: flex-start;
+    overflow: hidden;
+  }
 }
 ol,
 ul {
