@@ -40,20 +40,12 @@ const UpdateArr = () => {
 
 const observer = new IntersectionObserver((entries) => {
   const entry = entries[0];
-  console.log(entries);
   if (entry && entry.isIntersecting) {
     if (total.value === itemData.value.length) return;
     page.value += 1;
     getList();
   }
 });
-
-const getElement = (e) => {
-  if (e.target.scrollTop === 112) {
-    page.value = 2;
-    getList();
-  }
-};
 
 onMounted(() => {
   getList();
@@ -63,7 +55,7 @@ onMounted(() => {
 <template>
   <div class="home">
     <h1 class="title">vuejs repo list：</h1>
-    <div class="scroll-bg shadow" @scroll="getElement">
+    <div class="scroll-bg shadow">
       <div class="loader" v-if="!firstLoad">
         <div class="card-skeleton" v-for="item in 6" :key="item"></div>
       </div>
