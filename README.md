@@ -20,9 +20,9 @@ npm run build
 
 ### GitHub Pages
 
-[vuejs github repo](https://jellychou.github.io/infinite-scroll).
+[https://jellychou.github.io/infinite-scroll](https://jellychou.github.io/infinite-scroll).
 
 
-### vuejs's repo
+### vuejs's repos
 
-[vuejs github repo](https://api.github.com/users/vuejs/repos).
+[https://api.github.com/users/vuejs/repos](https://api.github.com/users/vuejs/repos).
